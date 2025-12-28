@@ -9,6 +9,60 @@
       content="The only color palette you need to build any UI."
     />
     <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Hex input styling */
+      .hex-input-container {
+        margin: 1.5rem 0;
+      }
+
+      .hex-input-container > label {
+        display: block;
+        font: var(--p);
+        margin-bottom: 0.5rem;
+        color: var(--text-muted);
+      }
+
+      .hex-input-wrapper {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .hex-input {
+        flex: 1;
+        background: var(--bg-light);
+        color: var(--text);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font: var(--p);
+        border: var(--border-card);
+        border-top: solid 1px var(--highlight);
+        box-shadow: var(--shadow);
+        font-family: monospace;
+      }
+
+      .hex-input:focus {
+        outline: none;
+        border-top: solid 2px var(--primary);
+      }
+
+      .hex-input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.5;
+      }
+
+      .apply-hex-btn {
+        background: var(--primary);
+        color: var(--bg-dark);
+        border: none;
+        padding: 0.5rem 1.5rem;
+        white-space: nowrap;
+      }
+
+      .apply-hex-btn:hover {
+        background: var(--secondary);
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
