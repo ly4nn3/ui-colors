@@ -11,6 +11,97 @@ function toggle() {
 const hueSlider = document.getElementById("hue-slider");
 const chromaSlider = document.getElementById("chroma-slider");
 
+// Hex input elements
+const hexInput = document.getElementById("hex-input");
+const applyHexBtn = document.getElementById("apply-hex");
+
+// Convert hex to OKLCH
+function hexToOklch(hex) {
+  if (!window.culori) return null;
+
+  // Remove # if present
+  hex = hex.replace("#", "");
+
+  // Validate hex format
+  if (!/^[0-9A-F]{6}$/i.test(hex)) {
+    return null;
+  }
+
+  const { oklch, rgb } = window.culori;
+
+  // Parse hex to RGB
+  const r = parseInt(hex.substr(0, 2), 16) / 255;
+  const g = parseInt(hex.substr(2, 2), 16) / 255;
+  const b = parseInt(hex.substr(4, 2), 16) / 255;
+
+  // Convert to OKLCH
+  const oklchColor = oklch({ mode: "rgb", r, g, b });
+
+  if (!oklchColor) return null;
+
+  return {
+    l: oklchColor.l,
+    c: oklchColor.c,
+    h: oklchColor.h || 0,
+  };
+}
+
+// Apply hex color
+function applyHexColor() {
+  const hex = hexInput.value.trim();
+
+  if (!hex) {
+    alert("Please enter a hex color code");
+    return;
+  }
+
+  const oklchColor = hexToOklch(hex);
+
+  if (!oklchColor) {
+    alert("Invalid hex color. Please use format: #3B82F6");
+    return;
+  }
+
+  // Update sliders with extracted values
+  hueSlider.value = Math.round(oklchColor.h);
+
+  // Clamp chroma to slider range (0 to 0.2)
+  const clampedChroma = Math.min(Math.max(oklchColor.c, 0), 0.2);
+  chromaSlider.value = clampedChroma.toFixed(2);
+
+  // Update UI
+  updateHueChroma();
+
+  // Visual feedback
+  applyHexBtn.textContent = "Applied!";
+  setTimeout(() => {
+    applyHexBtn.textContent = "Apply";
+  }, 1500);
+}
+
+// Event listeners for hex input
+applyHexBtn.addEventListener("click", applyHexColor);
+hexInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    applyHexColor();
+  }
+});
+
+// Auto-format hex input
+hexInput.addEventListener("input", (e) => {
+  let value = e.target.value;
+
+  // Remove any non-hex characters
+  value = value.replace(/[^#0-9A-Fa-f]/g, "");
+
+  // Ensure it starts with #
+  if (value && !value.startsWith("#")) {
+    value = "#" + value;
+  }
+
+  e.target.value = value;
+});
+
 function getResolvedCssVars() {
   const hue = Number(hueSlider.value);
   const hueSecondary = (hue + 180) % 360;
